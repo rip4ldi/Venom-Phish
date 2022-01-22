@@ -1,7 +1,7 @@
 import os
 import platform
-import colors
-from colors import r,g,y,c , b
+from setup import colors
+from setup.colors import r,g,y,c , b
 
 logo = f"""
  ▄█    █▄     ▄████████ ███▄▄▄▄    ▄██████▄    ▄▄▄▄███▄▄▄▄   
